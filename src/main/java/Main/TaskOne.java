@@ -1,7 +1,9 @@
 package Main;
 
 import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class TaskOne {
 
@@ -30,28 +32,31 @@ public class TaskOne {
 
     private static int getIslandsCount(int[][] arr) {
 
-        int counter = 0;
-        for (int i = 0; i < arr.length; i++) {
-            for (int j = 0; j < arr[i].length; j++) {
-                if (arr[i][j] == 1) {
-                    arr[i][j] = 0;
-                    counter++;
-                    checkNeighbourLandToFormOneIsland(arr, i, j + 1);
-                    checkNeighbourLandToFormOneIsland(arr, i, j - 1);
+        AtomicInteger counter = new AtomicInteger(0);
 
-                    checkNeighbourLandToFormOneIsland(arr, i + 1, j);
-                    checkNeighbourLandToFormOneIsland(arr, i + 1, j + 1);
-                    checkNeighbourLandToFormOneIsland(arr, i + 1, j - 1);
+        IntStream.range(0, arr.length)
+                .forEach(rowNo -> IntStream.range(0, arr[rowNo].length)
+                        .forEach(colNo -> {
+                            if (arr[rowNo][colNo] == 1) {
+                                arr[rowNo][colNo] = 0;
+                                counter.incrementAndGet();
+                                checkNeighbourLandToFormOneIsland(arr, rowNo, colNo + 1);
+                                checkNeighbourLandToFormOneIsland(arr, rowNo, colNo - 1);
 
-                    checkNeighbourLandToFormOneIsland(arr, i - 1, j);
-                    checkNeighbourLandToFormOneIsland(arr, i - 1, j + 1);
-                    checkNeighbourLandToFormOneIsland(arr, i - 1, j - 1);
+                                checkNeighbourLandToFormOneIsland(arr, rowNo + 1, colNo);
+                                checkNeighbourLandToFormOneIsland(arr, rowNo + 1, colNo + 1);
+                                checkNeighbourLandToFormOneIsland(arr, rowNo + 1, colNo - 1);
 
-                }
-            }
-        }
-        return counter;
+                                checkNeighbourLandToFormOneIsland(arr, rowNo - 1, colNo);
+                                checkNeighbourLandToFormOneIsland(arr, rowNo - 1, colNo + 1);
+                                checkNeighbourLandToFormOneIsland(arr, rowNo - 1, colNo - 1);
+
+                            }
+                        }));
+
+        return counter.get();
     }
+
 
     private static void checkNeighbourLandToFormOneIsland(int[][] arr, int i, int j) {
 
