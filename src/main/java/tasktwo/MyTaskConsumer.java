@@ -2,12 +2,16 @@ package tasktwo;
 
 import tasktwo.queue.MyQueue;
 
-import java.math.BigDecimal;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class MyTaskConsumer implements Runnable {
 
+    Logger logger = Logger.getLogger(MyTaskConsumer.class.getName());
+
     private final MyQueue queue;
     private final int threadNo;
+    private final TaskCalculator taskCalculator = new TaskCalculator();
 
     public MyTaskConsumer(MyQueue queue, int threadNo) {
         this.queue = queue;
@@ -18,14 +22,11 @@ public class MyTaskConsumer implements Runnable {
     public void run() {
         while (true) {
             try {
-                System.out.println("Consumed:" + calculateValue(queue.take()) + " by: " + threadNo);
+                String task = queue.take();
+                System.out.printf("Consumer: %d calculated value for task: %s is: %s at time: %d%n", threadNo, task, taskCalculator.calculateValue(task), System.currentTimeMillis());
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                logger.log(Level.WARNING, e.getMessage(), e);
             }
         }
-    }
-
-    private BigDecimal calculateValue(String chars) {
-        return null;
     }
 }

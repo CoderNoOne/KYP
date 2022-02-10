@@ -2,13 +2,18 @@ package tasktwo;
 
 import tasktwo.queue.MyQueue;
 
+import java.io.FileNotFoundException;
+import java.io.PrintStream;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class TaskTwo {
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException {
+
+        PrintStream fileOut = new PrintStream("./logs.txt");
+        System.setOut(fileOut);
 
         MyQueue myQueue = new MyQueue(100);
         ExecutorService producerExecutorService = Executors.newFixedThreadPool(4);
@@ -21,6 +26,9 @@ public class TaskTwo {
 
         consumerExecutorService.submit(new MyTaskConsumer(myQueue, 1));
         consumerExecutorService.submit(new MyTaskConsumer(myQueue, 2));
+
+        producerExecutorService.shutdown();
+        consumerExecutorService.shutdown();
 
     }
 }

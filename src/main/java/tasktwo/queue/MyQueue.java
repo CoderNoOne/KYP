@@ -16,9 +16,9 @@ public class MyQueue {
     int count;
     boolean rdyToProduce;
 
-    public MyQueue(int maxElements) {
+    public MyQueue(int maxCharNo) {
         this.rdyToProduce = true;
-        this.array = new String[maxElements];
+        this.array = new String[maxCharNo];
     }
 
     public void put(String element) throws InterruptedException {
