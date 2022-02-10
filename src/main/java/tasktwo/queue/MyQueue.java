@@ -16,9 +16,9 @@ public class MyQueue {
     int count;
     boolean rdyToProduce;
 
-    public MyQueue(int maxCharNo) {
+    public MyQueue(int limit) {
         this.rdyToProduce = true;
-        this.array = new String[maxCharNo];
+        this.array = new String[limit];
     }
 
     public void put(String element) throws InterruptedException {
@@ -34,8 +34,8 @@ public class MyQueue {
             if (putIndex == array.length) {
                 putIndex = 0;
             }
-            count++;
 
+            count++;
             if (count == array.length) {
                 rdyToProduce = false;
             }
@@ -59,10 +59,12 @@ public class MyQueue {
             if (takeIndex == array.length) {
                 takeIndex = 0;
             }
-            --count;
-            if (count == array.length / 2) {
+
+            if (count <= array.length / 2) {
                 rdyToProduce = true;
             }
+            --count;
+
             producingCondition.signal();
             return element;
         } finally {
